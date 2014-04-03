@@ -15,10 +15,10 @@ plain to = plainTextPart $ TL.pack $ getBody to
 html to = htmlPart $ TL.pack $ getBody to
 mail to = simpleMail from [ Address Nothing ( T.pack to ) ] cc bcc subject [ plain to , html to ]
 
-getSchoolClass to = case to =~ "^.(.)" of
-    "1" -> Inte
-    "2" -> Info
-    "3" -> Art
+getSchoolClass to = case to =~ "^.[123]" of
+    ( _ : "1" ) -> Inte
+    ( _ : "2" ) -> Info
+    ( _ : "3" ) -> Art
 
 getBody to = "情報科学部2年の北原です。\n現在「プログラミング愛好会」を設立しようと考えています。\n" ++ t ++ "\n興味を持ってくださった方や質問のある方などはこのメールに返信して下さい。よろしくお願いします。" where
     t = case getSchoolClass to of
