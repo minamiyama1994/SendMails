@@ -53,5 +53,9 @@ executable SendMails
   -- other-modules:       
   
   -- Other library packages from which modules are imported.
-  build-depends:       base ==4.6.*
+  build-depends:       base == 4.6.*
+                       , smtp-mail >= 0.1.4.5
+                       , regex-compat >= 0.95.1
+                       , regex-posix >= 0.95.2
+                       , text >= 0.11.3.1
   

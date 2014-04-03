@@ -1,24 +1,24 @@
-{-# LANGUAGE OverloadedStrings #-}
-
-import Data.Text
+import System.Environment
+import qualified Data.Text as T ( pack )
+import qualified Data.Text.Lazy as TL ( pack )
 import Text.Regex
+import Text.Regex.Posix
 import Network.Mail.SMTP
 
 data SchoolClass = Inte | Info | Art
 
-from = Address Nothing "x20058@edu.ipc.hiroshima-cu.ac.jp"
+from = Address Nothing $ T.pack "x20058@edu.ipc.hiroshima-cu.ac.jp"
 cc = [ ]
 bcc = [ ]
-subject = "プログラミング愛好会創設に関して"
-text to = plainTextPart $ pack $ getBody to
-html to = htmlPart $ pack $ getBody to
+subject = T.pack "プログラミング愛好会創設に関して"
+plain to = plainTextPart $ TL.pack $ getBody to
+html to = htmlPart $ TL.pack $ getBody to
+mail to = simpleMail from [ Address Nothing ( T.pack to ) ] cc bcc subject [ plain to , html to ]
 
-mail to = simpleMail from [ Address Nothing ( pack to ) ] cc bcc subject [ text to , html to ]
-
-getSchoolClass to = case to =~ "^.(.)" of
-    ( _ , [ '1' ] , _ ) -> Inte
-    ( _ , [ '2' ] , _ ) -> Info
-    ( _ , [ '3' ] , _ ) -> Art
+getSchoolClass to = case to =~ "^.[123]" of
+    ( _ : "1" ) -> Inte
+    ( _ : "2" ) -> Info
+    ( _ : "3" ) -> Art
 
 getBody to = "情報科学部2年の北原です。\r\n現在「プログラミング愛好会」を設立しようと考えています。\r\n" ++ t ++ "\r\n興味を持ってくださった方や質問のある方などはこのメールに返信して下さい。よろしくお願いします。" where
     t = case getSchoolClass to of
